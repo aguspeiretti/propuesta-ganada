@@ -307,7 +307,7 @@ function App({ data }) {
 
     const visibleFields = fieldApiNames.filter(apiName => {
         if (apiName === "Web_Origen") return false;
-        if (apiName === "Tipo_de_trabajo_a_facturar_ESP") return false; // Opcional
+        if (apiName === "Tipo_de_trabajo_a_facturar_ESP" && !WEB_ORIGEN_ESPANA.includes(webOrigen.trim())) return false;
 
         if (apiName === "Comentarios_1er_Pago_LATAM_Extendido" && !showTymFields) return false;
         if (apiName === "Primer_pago_moneda_local" && !showTymFields) return false;
