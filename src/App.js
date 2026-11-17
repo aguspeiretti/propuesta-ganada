@@ -21,6 +21,7 @@ function App({ data }) {
     "Cuenta_Bancaria_1er_Pago",
     // --- Campos con visibilidad condicional o menos prioritarios ---
     "Direcci_n_de_facturaci_n",
+    "Tipo_de_trabajo_a_facturar_ESP", // Solo visible para webs de España
     "Web_Origen", // Campo oculto, pero necesario para la lógica.
     "Comentarios_1er_Pago_LATAM_Extendido",
     "Comunidad_autonoma",
@@ -38,6 +39,36 @@ function App({ data }) {
     "Coord",
     "Comunidad_autonoma",
     "Vendedor",
+    "Tipo_de_trabajo_a_facturar_ESP",
+  ];
+
+  // Webs de origen de España (misma lista que el widget de ventas)
+  const WEB_ORIGEN_ESPANA = [
+    "ComoCitar",
+    "Cursos",
+    "Custom Sneaker",
+    "ProfeConClaseEs",
+    "ADEYDERECHO",
+    "TusOpos",
+    "PlagiumChecker",
+    "Tu Prog Didáctica",
+    "TU",
+    "TUTFM",
+    "Quiero mi TFG",
+    "TFGES",
+    "TFGON",
+    "TesisESP",
+    "Plagio",
+    "Academikast",
+    "TFGTFM.es",
+    "TuTFGCom",
+    "TuTesis",
+    "Otro país",
+    "Landing TU",
+    "TFGComprar",
+    "Blog",
+    "ConsejosUniversitarios",
+    "Programaciones Didácticas",
   ];
 
   const fieldLabels = {
@@ -59,6 +90,7 @@ function App({ data }) {
     "Vendedor": "Vendedor",
     "Referencia_Cliente": "Referencia Cliente",
     "Importe_final_moneda_local1": "Importe Final (Moneda Local)",
+    "Tipo_de_trabajo_a_facturar_ESP": "Tipo de trabajo a facturar",
   };
 
   const [formData, setFormData] = useState(null);
@@ -275,6 +307,8 @@ function App({ data }) {
 
     const visibleFields = fieldApiNames.filter(apiName => {
         if (apiName === "Web_Origen") return false;
+        if (apiName === "Tipo_de_trabajo_a_facturar_ESP") return false; // Opcional
+
         if (apiName === "Comentarios_1er_Pago_LATAM_Extendido" && !showTymFields) return false;
         if (apiName === "Primer_pago_moneda_local" && !showTymFields) return false;
         if (apiName === "Vendedor" && showTymFields) return false;
@@ -417,6 +451,7 @@ function App({ data }) {
   const webOrigen = formData?.Web_Origen || "";
   const showTymFields = webOrigen.startsWith("TyM ");
   const showComunidadAutonoma = ["Tu Prog Didáctica", "TPD", "Tu Prog Didactica"].includes(webOrigen);
+  const showTipoTrabajoFacturarESP = WEB_ORIGEN_ESPANA.includes(webOrigen.trim());
   
   // Condición para mostrar la calculadora
   const cuentaBancariaValue = picklistOptions["Cuenta_Bancaria_1er_Pago"]?.find(
@@ -572,6 +607,9 @@ function App({ data }) {
               return null;
             }
             if (apiName === "Comunidad_autonoma" && !showComunidadAutonoma) {
+              return null;
+            }
+            if (apiName === "Tipo_de_trabajo_a_facturar_ESP" && !showTipoTrabajoFacturarESP) {
               return null;
             }
             if (apiName === "Importe_final_moneda_local1") {
